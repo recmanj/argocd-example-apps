@@ -19,17 +19,17 @@ spec:
       checkout:
       - commit: ${{ commitFrom(vars.repoURL).ID }}
         path: ./src
-      - branch: env/${{ ctx.stage }}
+      - branch: ${{ vars.appName }}-${{ ctx.stage }}
         path: ./out
         # Create the branch if it does not exist.
         create: true
   # Following a "rendered branch" pattern, we delete all files in the
-  # app-specific subdirectory to ensure that we only have the files that are
+  # output directory to ensure that we only have the files that are
   # rendered from the Kustomize configuration in the ./src directory
   # of the repository after being rendered.
   - uses: git-clear
     config:
-      path: ./out/${{ vars.appName }}
+      path: ./out
   # Update the image in the Kustomize configuration located at ./src/<appPath>/envs/<stage>
   # in the repository.
   - uses: kustomize-set-image
@@ -40,11 +40,11 @@ spec:
       - image: ${{ vars.image }}
         tag: ${{ imageFrom(vars.image).Tag}}
   # Build the Kustomize configuration in the ./src directory using the <appPath>/envs/<stage>
-  # overlay to the app-specific subdirectory in the ./out directory.
+  # overlay to the ./out directory.
   - uses: kustomize-build
     config:
       path: ./src/${{ vars.appPath }}/envs/${{ ctx.stage }}
-      outPath: ./out/${{ vars.appName }}
+      outPath: ./out
   # Commit the changes to the Git repository.
   - uses: git-commit
     as: commit
