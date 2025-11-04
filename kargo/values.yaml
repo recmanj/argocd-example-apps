@@ -1,0 +1,7 @@
+# Kargo Helm Chart Values
+# Add any custom configuration here
+
+# Example: Uncomment to customize image
+# image:
+#   repository: ghcr.io/akuity/kargo
+#   tag: v1.8.3
