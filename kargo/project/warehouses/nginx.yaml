@@ -1,0 +1,16 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: nginx
+  namespace: argocd-example-apps
+spec:
+  subscriptions:
+  - image:
+      repoURL: nginx
+      imageSelectionStrategy: SemVer
+      semverConstraint: ^1.27.0
+  - git:
+      repoURL: https://github.com/recmanj/argocd-example-apps.git
+      branch: master
+      includePaths:
+      - "glob:_apps/nginx/**"

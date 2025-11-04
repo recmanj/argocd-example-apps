@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: nginx-prod
+
+resources:
+- ../../base
+
+patches:
+- patch: |-
+    - op: replace
+      path: /metadata/name
+      value: nginx-prod
+  target:
+    kind: Namespace
+    name: kustomize-nginx
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 3
+  target:
+    kind: Deployment
+    name: kustomize-nginx
