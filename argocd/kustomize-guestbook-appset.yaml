@@ -7,25 +7,37 @@ spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   generators:
-  - git:
-      repoURL: https://github.com/recmanj/argocd-example-apps.git
-      revision: master
-      directories:
-      - path: kustomize-guestbook/envs/*
+  # Matrix generator combines app list with environment directories
+  - matrix:
+      generators:
+      # List of applications to manage
+      - list:
+          elements:
+          - app: guestbook
+            kargoProject: kargo-guestbook
+            # To add more apps, add entries like:
+            # - app: blog
+            #   kargoProject: kargo-blog
+      # Environment directories discovered from git
+      - git:
+          repoURL: https://github.com/recmanj/argocd-example-apps.git
+          revision: master
+          directories:
+          - path: kustomize-guestbook/envs/*
   template:
     metadata:
-      name: 'guestbook-{{.path.basename}}'
+      name: '{{.app}}-{{.path.basename}}'
       annotations:
-        kargo.akuity.io/authorized-stage: 'kargo-guestbook:{{.path.basename}}'
+        kargo.akuity.io/authorized-stage: '{{.kargoProject}}:{{.path.basename}}'
     spec:
       project: default
       source:
         repoURL: https://github.com/recmanj/argocd-example-apps.git
         targetRevision: 'env/{{.path.basename}}'
-        path: '{{.path.path}}'
+        path: '{{.app}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: 'guestbook-{{.path.basename}}'
+        namespace: '{{.app}}-{{.path.basename}}'
       syncPolicy:
         automated:
           prune: true
