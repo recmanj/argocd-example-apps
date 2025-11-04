@@ -19,7 +19,7 @@ spec:
       checkout:
       - commit: ${{ commitFrom(vars.repoURL).ID }}
         path: ./src
-      - branch: ${{ vars.appName }}-${{ ctx.stage }}
+      - branch: kargo/${{ vars.appName }}/${{ ctx.stage }}
         path: ./out
         # Create the branch if it does not exist.
         create: true

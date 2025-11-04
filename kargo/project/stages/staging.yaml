@@ -2,7 +2,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: staging
-  namespace: kargo-guestbook
+  namespace: argocd-example-apps
 spec:
   requestedFreight:
   - origin:
@@ -21,11 +21,8 @@ spec:
         - name: branch
           value: master
         - name: image
-          # Must match the image repository in the Warehouse subscription
           value: gcr.io/google-samples/gb-frontend
         - name: appPath
           value: _apps/kustomize-guestbook
-        - name: appName
-          value: kustomize-guestbook
         - name: appName
           value: kustomize-guestbook

@@ -14,18 +14,18 @@ spec:
         - path: _apps/*/envs/*
   template:
     metadata:
-      name: '{{.app}}-{{.path.basename}}'
+      name: '{{index .path.segments 1}}-{{.path.basename}}'
       annotations:
-        kargo.akuity.io/authorized-stage: '{{.kargoProject}}:{{.path.basename}}'
+        kargo.akuity.io/authorized-stage: 'argocd-example-apps:{{.path.basename}}'
     spec:
       project: default
       source:
         repoURL: https://github.com/recmanj/argocd-example-apps.git
-        targetRevision: '{{.app}}-{{.path.basename}}'
+        targetRevision: 'kargo/{{index .path.segments 1}}/{{.path.basename}}'
         path: '.'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{.app}}-{{.path.basename}}'
+        namespace: '{{index .path.segments 1}}-{{.path.basename}}'
       syncPolicy:
         automated:
           prune: true

@@ -3,5 +3,15 @@ kind: Project
 metadata:
   name: argocd-example-apps
   annotations:
-    # This annotation ensures Projects (Namespaces) are created first when deployed via Argo CD
     argocd.argoproj.io/sync-wave: "-1"
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: ProjectConfig
+metadata:
+  name: argocd-example-apps
+  namespace: argocd-example-apps
+spec:
+  promotionPolicies:
+  - stageSelector:
+      name: dev
+    autoPromotionEnabled: true

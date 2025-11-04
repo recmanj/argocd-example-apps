@@ -2,7 +2,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
   name: guestbook
-  namespace: kargo-guestbook
+  namespace: argocd-example-apps
 spec:
   subscriptions:
   - image:
@@ -14,5 +14,5 @@ spec:
       repoURL: https://github.com/recmanj/argocd-example-apps.git
       branch: master
       includePaths:
-      - "glob:kustomize-guestbook/**"
+      - "glob:_apps/kustomize-guestbook/**"
       strictSemvers: false
