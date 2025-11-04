@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kustomize-guestbook
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - git:
+      repoURL: https://github.com/recmanj/argocd-example-apps.git
+      revision: master
+      directories:
+      - path: kustomize-guestbook/envs/*
+  template:
+    metadata:
+      name: 'guestbook-{{.path.basename}}'
+      annotations:
+        kargo.akuity.io/authorized-stage: 'kargo-guestbook:{{.path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/recmanj/argocd-example-apps.git
+        targetRevision: master
+        path: '{{.path.path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: 'guestbook-{{.path.basename}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
