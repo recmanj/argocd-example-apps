@@ -13,4 +13,4 @@ spec:
       repoURL: https://github.com/recmanj/argocd-example-apps.git
       branch: master
       includePaths:
-      - kustomize-guestbook/**
+      - kustomize-guestbook/
