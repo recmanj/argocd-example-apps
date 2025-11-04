@@ -7,10 +7,12 @@ spec:
   subscriptions:
   - image:
       repoURL: gcr.io/google-samples/gb-frontend
-      imageSelectionStrategy: Digest
-      constraint: latest
+      imageSelectionStrategy: SemVer
+      semverConstraint: ^v5
+      strictSemvers: false
   - git:
       repoURL: https://github.com/recmanj/argocd-example-apps.git
       branch: master
       includePaths:
-      - kustomize-guestbook/envs/**
+      - "glob:kustomize-guestbook/**"
+      strictSemvers: false
