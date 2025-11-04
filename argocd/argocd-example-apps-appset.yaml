@@ -16,7 +16,7 @@ spec:
     metadata:
       name: '{{index .path.segments 1}}-{{.path.basename}}'
       annotations:
-        kargo.akuity.io/authorized-stage: 'argocd-example-apps:{{.path.basename}}'
+        kargo.akuity.io/authorized-stage: 'argocd-example-apps:{{index .path.segments 1}}-{{.path.basename}}'
     spec:
       project: default
       source:

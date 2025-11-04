@@ -10,7 +10,7 @@ spec:
       name: nginx
     sources:
       stages:
-      - dev
+      - nginx-staging
   promotionTemplate:
     spec:
       steps:
@@ -21,6 +21,8 @@ spec:
           value: https://github.com/recmanj/argocd-example-apps.git
         - name: branch
           value: master
+        - name: env
+          value: prod
         - name: image
           value: nginx
         - name: appPath

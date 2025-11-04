@@ -1,16 +1,16 @@
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
-  name: guestbook-prod
+  name: kustomize-guestbook-staging
   namespace: argocd-example-apps
 spec:
   requestedFreight:
   - origin:
       kind: Warehouse
-      name: guestbook
+      name: kustomize-guestbook
     sources:
       stages:
-      - staging
+      - kustomize-guestbook-dev
   promotionTemplate:
     spec:
       steps:
@@ -21,6 +21,8 @@ spec:
           value: https://github.com/recmanj/argocd-example-apps.git
         - name: branch
           value: master
+        - name: env
+          value: staging
         - name: image
           value: gcr.io/google-samples/gb-frontend
         - name: appPath
