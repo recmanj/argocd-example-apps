@@ -1,0 +1,29 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: staging
+  namespace: kargo-guestbook
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: guestbook
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+        vars:
+        - name: repoURL
+          value: https://github.com/recmanj/argocd-example-apps.git
+        - name: branch
+          value: master
+        - name: image
+          # Must match the image repository in the Warehouse subscription
+          value: gcr.io/google-samples/gb-frontend
+        - name: appPath
+          value: kustomize-guestbook
+        - name: appName
+          value: guestbook

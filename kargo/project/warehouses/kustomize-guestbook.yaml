@@ -1,0 +1,16 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: guestbook
+  namespace: kargo-guestbook
+spec:
+  subscriptions:
+  - image:
+      repoURL: gcr.io/google-samples/gb-frontend
+      imageSelectionStrategy: Digest
+      constraint: latest
+  - git:
+      repoURL: https://github.com/recmanj/argocd-example-apps.git
+      branch: master
+      includePaths:
+      - kustomize-guestbook/**
