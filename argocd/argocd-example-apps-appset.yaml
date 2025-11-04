@@ -1,29 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: kustomize-guestbook
+  name: argocd-example-apps
   namespace: argocd
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   generators:
-  # Matrix generator combines app list with environment directories
-  - matrix:
-      generators:
-      # List of applications to manage
-      - list:
-          elements:
-          - app: guestbook
-            kargoProject: kargo-guestbook
-            # To add more apps, add entries like:
-            # - app: blog
-            #   kargoProject: kargo-blog
-      # Environment directories discovered from git
-      - git:
-          repoURL: https://github.com/recmanj/argocd-example-apps.git
-          revision: master
-          directories:
-          - path: kustomize-guestbook/envs/*
+    - git:
+        repoURL: https://github.com/recmanj/argocd-example-apps.git
+        revision: master
+        directories:
+        - path: _apps/*/envs/*
   template:
     metadata:
       name: '{{.app}}-{{.path.basename}}'

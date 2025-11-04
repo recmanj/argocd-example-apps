@@ -24,6 +24,8 @@ spec:
           # Must match the image repository in the Warehouse subscription
           value: gcr.io/google-samples/gb-frontend
         - name: appPath
+          value: _apps/kustomize-guestbook
+        - name: appName
           value: kustomize-guestbook
         - name: appName
-          value: guestbook
+          value: kustomize-guestbook
