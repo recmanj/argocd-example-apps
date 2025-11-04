@@ -6,10 +6,6 @@ namespace: guestbook-staging
 resources:
   - ../../base
 
-images:
-  - name: gcr.io/google-samples/gb-frontend
-    newTag: v4
-
 patches:
   - target:
       kind: Namespace

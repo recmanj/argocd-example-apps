@@ -21,7 +21,7 @@ spec:
       project: default
       source:
         repoURL: https://github.com/recmanj/argocd-example-apps.git
-        targetRevision: master
+        targetRevision: 'env/{{.path.basename}}'
         path: '{{.path.path}}'
       destination:
         server: https://kubernetes.default.svc
