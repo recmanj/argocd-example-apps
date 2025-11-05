@@ -18,7 +18,7 @@ sleep 3
 
 echo ""
 echo "Application status:"
-kubectl -n argocd get applicationset argocd-example-apps-appset
+kubectl -n argocd get applicationset argocd-example-apps
 
 echo ""
 echo "========================================="
@@ -28,7 +28,7 @@ echo ""
 echo "The ApplicationSet will now discover and manage applications in _apps/*/envs/${ENVIRONMENT}/"
 echo ""
 echo "To check status:"
-echo "  kubectl -n argocd get applicationset argocd-example-apps-appset"
+echo "  kubectl -n argocd get applicationset argocd-example-apps"
 echo "  kubectl -n argocd get applications"
 echo ""
 echo "To access ArgoCD UI:"

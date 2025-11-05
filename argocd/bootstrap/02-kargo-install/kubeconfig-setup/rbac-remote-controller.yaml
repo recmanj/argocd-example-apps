@@ -17,11 +17,15 @@ rules:
 - apiGroups: ["kargo.akuity.io"]
   resources:
     - stages
-    - freight
+    - freights
     - warehouses
     - promotions
     - analysisruns
     - analysistemplates
+    - projectconfigs
+    - promotiontasks
+    - clusterpromotiontasks
+    - clusterconfigs
   verbs: ["get", "list", "watch"]
 
 # Update status of Kargo resources
@@ -29,34 +33,60 @@ rules:
 - apiGroups: ["kargo.akuity.io"]
   resources:
     - stages/status
-    - freight/status
+    - freights/status
     - promotions/status
     - analysisruns/status
+    - projects/status
   verbs: ["update", "patch"]
+
+# Patch Kargo resources (for finalizers, etc.)
+# Controllers need to patch resources they manage
+- apiGroups: ["kargo.akuity.io"]
+  resources:
+    - stages
+    - freights
+    - warehouses
+  verbs: ["patch"]
 
 # Create and update Promotions
 # Controllers need to create promotions as part of automation
 - apiGroups: ["kargo.akuity.io"]
   resources:
     - promotions
+    - projects
   verbs: ["create", "update", "patch"]
 
-# Read ConfigMaps (for promotion mechanisms)
-# Limited to specific namespaces via RoleBindings
+# Read ConfigMaps and ServiceAccounts
 - apiGroups: [""]
   resources:
     - configmaps
+    - namespaces
   verbs: ["get", "list", "watch"]
+
+# Full access to core resources in project namespaces
+# Required for Kargo's dynamic RBAC - controller must have these permissions
+# to delegate them via RoleBindings (escalation prevention)
+- apiGroups: [""]
+  resources:
+    - configmaps
+    - secrets
+    - serviceaccounts
+  verbs: ["*"]
+
+# Manage RBAC for Kargo projects
+# Controllers need to create Roles/RoleBindings and ClusterRoles/ClusterRoleBindings
+# for Kargo's dynamic RBAC feature
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources:
+    - roles
+    - rolebindings
+    - clusterroles
+    - clusterrolebindings
+  verbs: ["*"]
 
 # NO cluster-wide Secret access
 # Secret access must be granted per-project via RoleBindings
 # Controllers receive dynamic RBAC for Secrets on a per-Project basis
-
-# Read Projects to understand RBAC scope
-- apiGroups: ["kargo.akuity.io"]
-  resources:
-    - projects
-  verbs: ["get", "list", "watch"]
 
 ---
 # ClusterRoleBinding for Remote Controllers

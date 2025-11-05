@@ -49,6 +49,12 @@ controller:
     - argocd-example-apps
     - kargo-cluster-secrets
 
+  # Argo Rollouts Integration
+  # Disabled because Argo Rollouts is not installed in this environment
+  # This prevents the controller from requiring RBAC permissions to list analysistemplates
+  rollouts:
+    integrationEnabled: false
+
 ## Webhooks Configuration
 webhooks:
   # Webhooks are DISABLED for distributed controllers

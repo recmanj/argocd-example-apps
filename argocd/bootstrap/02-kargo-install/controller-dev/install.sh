@@ -5,9 +5,9 @@ echo "=== Kargo Distributed Controller Installation (Dev Cluster) ==="
 echo ""
 
 # Check prerequisites
-if ! command -v helm &> /dev/null; then
-    echo "Error: Helm is not installed. Please install Helm v3.13.1 or later."
-    exit 1
+if ! command -v helm &>/dev/null; then
+  echo "Error: Helm is not installed. Please install Helm v3.13.1 or later."
+  exit 1
 fi
 
 # Check if we're in the right cluster
@@ -18,20 +18,20 @@ echo ""
 read -p "Is this the DEV cluster? (y/N) " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "Please switch to the dev cluster context first:"
-    echo "  kubectl config use-context <dev-cluster-context>"
-    exit 1
+  echo "Please switch to the dev cluster context first:"
+  echo "  kubectl config use-context <dev-cluster-context>"
+  exit 1
 fi
 
 # Check if control plane kubeconfig secret exists
-if ! kubectl -n kargo get secret kargo-controlplane-kubeconfig &> /dev/null; then
-    echo "Error: Secret 'kargo-controlplane-kubeconfig' not found in kargo namespace."
-    echo ""
-    echo "Please create the kubeconfig secret first:"
-    echo "  cd ../kubeconfig-setup"
-    echo "  ./create-kubeconfig.sh        # Run this in PROD cluster"
-    echo "  ./deploy-secret.sh dev        # Run this in DEV cluster"
-    exit 1
+if ! kubectl -n kargo get secret kargo-controlplane-kubeconfig &>/dev/null; then
+  echo "Error: Secret 'kargo-controlplane-kubeconfig' not found in kargo namespace."
+  echo ""
+  echo "Please create the kubeconfig secret first:"
+  echo "  cd ../kubeconfig-setup"
+  echo "  ./create-kubeconfig.sh        # Run this in PROD cluster"
+  echo "  ./deploy-secret.sh dev        # Run this in DEV cluster"
+  exit 1
 fi
 
 echo "Installing Kargo controller (dev-shard) via Helm..."

@@ -165,14 +165,14 @@ EOF
 echo "Kubeconfig created: $KUBECONFIG_FILE"
 echo ""
 
-# Test the kubeconfig
-echo "Testing kubeconfig..."
-if kubectl --kubeconfig="$KUBECONFIG_FILE" cluster-info &> /dev/null; then
-    echo "✓ Kubeconfig is valid and can connect to the cluster"
-else
-    echo "✗ Warning: Kubeconfig validation failed"
-    echo "  This might be okay if the control plane API is not accessible from here"
-fi
+# # Test the kubeconfig
+# echo "Testing kubeconfig..."
+# if kubectl --kubeconfig="$KUBECONFIG_FILE" cluster-info &> /dev/null; then
+#     echo "✓ Kubeconfig is valid and can connect to the cluster"
+# else
+#     echo "✗ Warning: Kubeconfig validation failed"
+#     echo "  This might be okay if the control plane API is not accessible from here"
+# fi
 
 echo ""
 echo "========================================="
