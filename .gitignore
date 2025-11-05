@@ -1,1 +1,5 @@
 /**/charts/
+
+# Sensitive kubeconfig files
+**/kargo-controlplane-kubeconfig.yaml
+**/kargo-controlplane-kubeconfig*.yaml

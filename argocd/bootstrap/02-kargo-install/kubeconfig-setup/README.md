@@ -143,23 +143,30 @@ Same as Method 1, Step 4 above.
 
 ## Security Considerations
 
+### ⚠️ IMPORTANT: Use Minimal RBAC
+
+Remote controllers should use the minimal `kargo-remote-controller` ClusterRole,
+NOT the `kargo-admin` role. See `SECURITY.md` for detailed security configuration.
+
+The `create-kubeconfig.sh` script automatically applies minimal RBAC using
+`rbac-remote-controller.yaml`.
+
 ### Service Account Permissions
 
-The service account needs read access to Kargo resources. Grant minimal permissions:
+Remote controllers need:
+- **Cluster-level**: Read Kargo CRDs, update status (via `kargo-remote-controller` ClusterRole)
+- **Namespace-level**: Read secrets in specific project namespaces (via per-project RoleBindings)
 
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: kargo-remote-controller
-rules:
-- apiGroups: ["kargo.akuity.io"]
-  resources: ["*"]
-  verbs: ["get", "list", "watch", "update", "patch"]
-- apiGroups: [""]
-  resources: ["secrets", "configmaps"]
-  verbs: ["get", "list", "watch"]
+**Per-Project Secret Access:**
+```bash
+# Apply after creating kubeconfig
+./apply-per-project-rbac.sh
 ```
+
+This grants remote controllers access to Git credentials and other secrets
+in the `argocd-example-apps` and `kargo-cluster-secrets` namespaces only.
+
+For complete security documentation, see: **[SECURITY.md](./SECURITY.md)**
 
 ### Network Access
 

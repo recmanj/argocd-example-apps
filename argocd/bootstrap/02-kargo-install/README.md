@@ -389,12 +389,15 @@ Reinstall controller with correct values.
 
 ## Security Considerations
 
+⚠️ **IMPORTANT**: This setup has been configured with security best practices.
+See [kubeconfig-setup/SECURITY.md](./kubeconfig-setup/SECURITY.md) for complete details.
+
 ### Service Account Permissions
 
-The control plane service account (`kargo-remote-controller`) needs:
-- Read access to Kargo CRDs
-- Read/write access to Secrets in kargo namespace
-- Read access to cluster-scoped secrets namespace
+The control plane service account (`kargo-remote-controller`) uses minimal RBAC:
+- **Cluster-level**: Read Kargo CRDs, update status (via `kargo-remote-controller` ClusterRole)
+- **Namespace-level**: Read secrets in specific project namespaces only (via RoleBindings)
+- **NO cluster-wide secret access** (follows Kargo security best practices)
 
 ### Network Security
 

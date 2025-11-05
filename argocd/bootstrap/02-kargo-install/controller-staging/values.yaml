@@ -36,6 +36,19 @@ controller:
       memory: "512Mi"
       cpu: "500m"
 
+  # Service Account Configuration
+  serviceAccount:
+    # SECURITY: Explicitly disable cluster-wide secret reading
+    # Remote controllers should only have access to secrets in specific
+    # project namespaces via RoleBindings (see kubeconfig-setup/rbac-per-project.yaml)
+    clusterWideSecretReadingEnabled: false
+
+  # Shared Credentials Namespaces
+  # Limit secret access to specific namespaces only
+  sharedCredentialsNamespaces:
+    - argocd-example-apps
+    - kargo-cluster-secrets
+
 ## Webhooks Configuration
 webhooks:
   # Webhooks are DISABLED for distributed controllers
