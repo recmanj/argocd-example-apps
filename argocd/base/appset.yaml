@@ -12,8 +12,8 @@ spec:
         revision: master
         directories:
         # This will be patched by envs to filter by environment
-        # e.g., dev: _apps/*/envs/dev
-        - path: _apps/*/envs/*
+        # e.g., dev: apps/*/envs/dev
+        - path: apps/*/envs/*
   template:
     metadata:
       # Application name format: just the app name (no env suffix)

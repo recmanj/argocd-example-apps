@@ -28,6 +28,6 @@ spec:
         - name: image
           value: nginx
         - name: appPath
-          value: _apps/nginx
+          value: apps/nginx
         - name: appName
           value: nginx

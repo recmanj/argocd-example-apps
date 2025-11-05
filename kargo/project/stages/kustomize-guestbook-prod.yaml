@@ -27,6 +27,6 @@ spec:
         - name: image
           value: gcr.io/google-samples/gb-frontend
         - name: appPath
-          value: _apps/kustomize-guestbook
+          value: apps/kustomize-guestbook
         - name: appName
           value: kustomize-guestbook

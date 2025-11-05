@@ -28,6 +28,6 @@ spec:
         - name: image
           value: quay.io/jetstack/cert-manager-controller
         - name: appPath
-          value: _apps/cert-manager
+          value: apps/cert-manager
         - name: appName
           value: cert-manager

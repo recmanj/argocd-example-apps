@@ -11,7 +11,7 @@ spec:
         repoURL: https://github.com/recmanj/argocd-example-apps.git
         revision: master
         directories:
-        - path: _apps/*/envs/*
+        - path: apps/*/envs/*
   template:
     metadata:
       name: '{{index .path.segments 1}}-{{.path.basename}}'

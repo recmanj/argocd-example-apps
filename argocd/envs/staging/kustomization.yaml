@@ -15,7 +15,7 @@ patches:
   - patch: |-
       - op: replace
         path: /spec/generators/0/git/directories/0/path
-        value: _apps/*/envs/staging
+        value: apps/*/envs/staging
     target:
       kind: ApplicationSet
       name: argocd-example-apps

@@ -17,4 +17,4 @@ spec:
       repoURL: https://github.com/recmanj/argocd-example-apps.git
       branch: master
       includePaths:
-      - "glob:_apps/cert-manager/**"
+      - "glob:apps/cert-manager/**"
