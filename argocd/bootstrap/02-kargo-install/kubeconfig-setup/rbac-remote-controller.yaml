@@ -1,107 +1,21 @@
 ---
-# Minimal ClusterRole for Remote Kargo Controllers
-# This role grants only the permissions needed for distributed controllers
-# to read Kargo resources and update their status.
-#
-# SECURITY: This replaces the overly-permissive kargo-admin role
-# that was previously used for remote controllers.
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: kargo-remote-controller
-  labels:
-    app.kubernetes.io/name: kargo
-    app.kubernetes.io/component: remote-controller-rbac
-rules:
-# Read Kargo custom resources
-- apiGroups: ["kargo.akuity.io"]
-  resources:
-    - stages
-    - freights
-    - warehouses
-    - promotions
-    - analysisruns
-    - analysistemplates
-    - projectconfigs
-    - promotiontasks
-    - clusterpromotiontasks
-    - clusterconfigs
-  verbs: ["get", "list", "watch"]
-
-# Update status of Kargo resources
-# Controllers need to update status for resources they manage
-- apiGroups: ["kargo.akuity.io"]
-  resources:
-    - stages/status
-    - freights/status
-    - promotions/status
-    - analysisruns/status
-    - projects/status
-  verbs: ["update", "patch"]
-
-# Patch Kargo resources (for finalizers, etc.)
-# Controllers need to patch resources they manage
-- apiGroups: ["kargo.akuity.io"]
-  resources:
-    - stages
-    - freights
-    - warehouses
-  verbs: ["patch"]
-
-# Create and update Promotions
-# Controllers need to create promotions as part of automation
-- apiGroups: ["kargo.akuity.io"]
-  resources:
-    - promotions
-    - projects
-  verbs: ["create", "update", "patch"]
-
-# Read ConfigMaps and ServiceAccounts
-- apiGroups: [""]
-  resources:
-    - configmaps
-    - namespaces
-  verbs: ["get", "list", "watch"]
-
-# Full access to core resources in project namespaces
-# Required for Kargo's dynamic RBAC - controller must have these permissions
-# to delegate them via RoleBindings (escalation prevention)
-- apiGroups: [""]
-  resources:
-    - configmaps
-    - secrets
-    - serviceaccounts
-  verbs: ["*"]
-
-# Manage RBAC for Kargo projects
-# Controllers need to create Roles/RoleBindings and ClusterRoles/ClusterRoleBindings
-# for Kargo's dynamic RBAC feature
-- apiGroups: ["rbac.authorization.k8s.io"]
-  resources:
-    - roles
-    - rolebindings
-    - clusterroles
-    - clusterrolebindings
-  verbs: ["*"]
-
-# NO cluster-wide Secret access
-# Secret access must be granted per-project via RoleBindings
-# Controllers receive dynamic RBAC for Secrets on a per-Project basis
-
----
 # ClusterRoleBinding for Remote Controllers
-# This binding grants the minimal permissions to the remote controller service account
+# This binding grants full admin permissions to the remote controller service account
+# by binding it to the existing kargo-admin ClusterRole.
+#
+# NOTE: This gives the remote controller complete, cluster-wide access to all Kargo resources.
+# Consider using more restrictive permissions for production environments.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: kargo-remote-controller
+  name: kargo-remote-controller-admin
   labels:
     app.kubernetes.io/name: kargo
     app.kubernetes.io/component: remote-controller-rbac
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: kargo-remote-controller
+  name: kargo-admin
 subjects:
 - kind: ServiceAccount
   name: kargo-remote-controller
