@@ -4,8 +4,8 @@ kind: Kustomization
 resources:
   - ../../base
 
-# Add staging environment label
-commonLabels:
+# Add staging environment annotation (not label, to avoid immutable selector issues)
+commonAnnotations:
   environment: staging
 
 # Staging uses default resource settings from base

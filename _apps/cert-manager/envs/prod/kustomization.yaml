@@ -4,8 +4,8 @@ kind: Kustomization
 resources:
   - ../../base
 
-# Add prod environment label
-commonLabels:
+# Add prod environment annotation (not label, to avoid immutable selector issues)
+commonAnnotations:
   environment: prod
 
 # Production configuration

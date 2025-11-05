@@ -4,8 +4,8 @@ kind: Kustomization
 resources:
   - ../../base
 
-# Add dev environment label
-commonLabels:
+# Add dev environment annotation (not label, to avoid immutable selector issues)
+commonAnnotations:
   environment: dev
 
 # Optional: Reduce resources for dev environment
