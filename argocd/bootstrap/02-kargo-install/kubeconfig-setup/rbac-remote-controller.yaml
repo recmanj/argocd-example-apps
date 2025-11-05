@@ -1,0 +1,78 @@
+---
+# Minimal ClusterRole for Remote Kargo Controllers
+# This role grants only the permissions needed for distributed controllers
+# to read Kargo resources and update their status.
+#
+# SECURITY: This replaces the overly-permissive kargo-admin role
+# that was previously used for remote controllers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kargo-remote-controller
+  labels:
+    app.kubernetes.io/name: kargo
+    app.kubernetes.io/component: remote-controller-rbac
+rules:
+# Read Kargo custom resources
+- apiGroups: ["kargo.akuity.io"]
+  resources:
+    - stages
+    - freight
+    - warehouses
+    - promotions
+    - analysisruns
+    - analysistemplates
+  verbs: ["get", "list", "watch"]
+
+# Update status of Kargo resources
+# Controllers need to update status for resources they manage
+- apiGroups: ["kargo.akuity.io"]
+  resources:
+    - stages/status
+    - freight/status
+    - promotions/status
+    - analysisruns/status
+  verbs: ["update", "patch"]
+
+# Create and update Promotions
+# Controllers need to create promotions as part of automation
+- apiGroups: ["kargo.akuity.io"]
+  resources:
+    - promotions
+  verbs: ["create", "update", "patch"]
+
+# Read ConfigMaps (for promotion mechanisms)
+# Limited to specific namespaces via RoleBindings
+- apiGroups: [""]
+  resources:
+    - configmaps
+  verbs: ["get", "list", "watch"]
+
+# NO cluster-wide Secret access
+# Secret access must be granted per-project via RoleBindings
+# Controllers receive dynamic RBAC for Secrets on a per-Project basis
+
+# Read Projects to understand RBAC scope
+- apiGroups: ["kargo.akuity.io"]
+  resources:
+    - projects
+  verbs: ["get", "list", "watch"]
+
+---
+# ClusterRoleBinding for Remote Controllers
+# This binding grants the minimal permissions to the remote controller service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kargo-remote-controller
+  labels:
+    app.kubernetes.io/name: kargo
+    app.kubernetes.io/component: remote-controller-rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kargo-remote-controller
+subjects:
+- kind: ServiceAccount
+  name: kargo-remote-controller
+  namespace: kargo

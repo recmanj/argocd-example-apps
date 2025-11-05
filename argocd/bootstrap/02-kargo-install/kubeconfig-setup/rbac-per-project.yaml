@@ -1,0 +1,51 @@
+---
+# Per-Project Secret Access for Remote Controllers
+#
+# This RoleBinding grants remote controllers read-only access to Secrets
+# within a specific project namespace. This follows the principle of least
+# privilege by limiting secret access to only the namespaces that need it.
+#
+# USAGE:
+# 1. Copy this file for each project namespace
+# 2. Update the namespace field
+# 3. Apply: kubectl apply -f rbac-per-project-<namespace>.yaml
+#
+# The kargo-controller-read-secrets ClusterRole is provided by Kargo itself
+# and grants read-only access to Secrets.
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kargo-remote-controller-read-secrets
+  namespace: argocd-example-apps  # CHANGE THIS to your project namespace
+  labels:
+    app.kubernetes.io/name: kargo
+    app.kubernetes.io/component: remote-controller-rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kargo-controller-read-secrets  # Provided by Kargo installation
+subjects:
+- kind: ServiceAccount
+  name: kargo-remote-controller
+  namespace: kargo
+
+---
+# Optional: Grant access to kargo-cluster-secrets namespace
+# This namespace is used for cluster-scoped credentials
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kargo-remote-controller-read-secrets
+  namespace: kargo-cluster-secrets
+  labels:
+    app.kubernetes.io/name: kargo
+    app.kubernetes.io/component: remote-controller-rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kargo-controller-read-secrets  # Provided by Kargo installation
+subjects:
+- kind: ServiceAccount
+  name: kargo-remote-controller
+  namespace: kargo

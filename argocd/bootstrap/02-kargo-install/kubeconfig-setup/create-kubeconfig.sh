@@ -71,21 +71,17 @@ kubectl create namespace kargo --dry-run=client -o yaml | kubectl apply -f -
 kubectl -n kargo create serviceaccount kargo-remote-controller \
   --dry-run=client -o yaml | kubectl apply -f -
 
-# Create or update ClusterRoleBinding
-cat <<EOF | kubectl apply -f -
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: kargo-remote-controller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: kargo-admin
-subjects:
-- kind: ServiceAccount
-  name: kargo-remote-controller
-  namespace: kargo
-EOF
+# Apply minimal RBAC for remote controllers
+echo "Applying minimal RBAC for remote controllers..."
+kubectl apply -f "$(dirname "$0")/rbac-remote-controller.yaml"
+
+echo "✓ Service account created with minimal permissions"
+echo ""
+echo "⚠️  SECURITY NOTE:"
+echo "  Remote controllers now use 'kargo-remote-controller' ClusterRole"
+echo "  instead of 'kargo-admin' for better security isolation."
+echo "  Per-project secret access must be configured separately."
+echo ""
 
 echo "Waiting for service account token to be created..."
 sleep 3

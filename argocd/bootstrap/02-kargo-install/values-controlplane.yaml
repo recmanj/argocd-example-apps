@@ -77,6 +77,18 @@ controller:
       memory: "512Mi"
       cpu: "500m"
 
+  # Service Account Configuration
+  serviceAccount:
+    # Control plane controller can have broader access since it runs in prod
+    # However, still recommended to use per-project RBAC for better security
+    clusterWideSecretReadingEnabled: false
+
+  # Shared Credentials Namespaces
+  # These namespaces contain Git credentials, Docker registry credentials, etc.
+  sharedCredentialsNamespaces:
+    - argocd-example-apps
+    - kargo-cluster-secrets
+
 ## Webhooks Configuration
 webhooks:
   # Webhooks are enabled for the control plane
