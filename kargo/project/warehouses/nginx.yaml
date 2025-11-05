@@ -6,7 +6,7 @@ metadata:
 spec:
   subscriptions:
   - image:
-      repoURL: nginx
+      repoURL: public.ecr.aws/nginx/nginx
       imageSelectionStrategy: SemVer
       semverConstraint: ^1.27.0
   - git:
