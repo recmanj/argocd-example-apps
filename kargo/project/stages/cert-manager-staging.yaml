@@ -1,7 +1,7 @@
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
-  name: nginx-staging
+  name: cert-manager-staging
   namespace: argocd-example-apps
 spec:
   # Assign this Stage to the staging cluster controller
@@ -9,10 +9,10 @@ spec:
   requestedFreight:
   - origin:
       kind: Warehouse
-      name: nginx
+      name: cert-manager
     sources:
       stages:
-      - nginx-dev
+      - cert-manager-dev
   promotionTemplate:
     spec:
       steps:
@@ -26,8 +26,8 @@ spec:
         - name: env
           value: staging
         - name: image
-          value: nginx
+          value: quay.io/jetstack/cert-manager-controller
         - name: appPath
-          value: _apps/nginx
+          value: _apps/cert-manager
         - name: appName
-          value: nginx
+          value: cert-manager

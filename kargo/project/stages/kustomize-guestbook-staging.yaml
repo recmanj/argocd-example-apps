@@ -4,6 +4,8 @@ metadata:
   name: kustomize-guestbook-staging
   namespace: argocd-example-apps
 spec:
+  # Assign this Stage to the staging cluster controller
+  shard: staging-shard
   requestedFreight:
   - origin:
       kind: Warehouse

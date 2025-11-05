@@ -1,0 +1,62 @@
+# Kargo Helm Values - Production Configuration
+# Customize these values for your production environment
+
+api:
+  # Admin account configuration
+  # IMPORTANT: Generate these securely before deploying
+  adminAccount:
+    # Generate with: htpasswd -bnBC 10 "" <password> | tr -d ':\n'
+    passwordHash: ""  # SET THIS BEFORE DEPLOYING
+    # Generate with: openssl rand -base64 48 | tr -d "=+/" | head -c 32
+    tokenSigningKey: ""  # SET THIS BEFORE DEPLOYING
+
+  # Service configuration
+  service:
+    type: ClusterIP  # Change to LoadBalancer or NodePort if needed
+
+  # Ingress configuration (recommended for production)
+  ingress:
+    enabled: false  # Set to true and configure below
+    # className: nginx
+    # annotations:
+    #   cert-manager.io/cluster-issuer: letsencrypt-prod
+    # hosts:
+    #   - host: kargo.example.com
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    # tls:
+    #   - secretName: kargo-tls
+    #     hosts:
+    #       - kargo.example.com
+
+  # Resources (adjust based on your needs)
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+controller:
+  # Resources for controller
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+# RBAC configuration
+rbac:
+  # Ensure RBAC is enabled for production
+  installClusterRoles: true
+
+# For multi-cluster management, you may need to configure additional settings
+# Refer to Kargo documentation for advanced configurations:
+# - Multi-cluster authentication
+# - SSO/OIDC integration
+# - Custom RBAC policies
+# - Webhook configurations

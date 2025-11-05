@@ -4,6 +4,8 @@ metadata:
   name: kustomize-guestbook-dev
   namespace: argocd-example-apps
 spec:
+  # Assign this Stage to the dev cluster controller
+  shard: dev-shard
   requestedFreight:
   - origin:
       kind: Warehouse

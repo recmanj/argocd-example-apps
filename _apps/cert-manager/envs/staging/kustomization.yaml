@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+# Add staging environment label
+commonLabels:
+  environment: staging
+
+# Staging uses default resource settings from base
+# Optional: Add any staging-specific patches here

@@ -45,7 +45,7 @@ spec:
   - uses: argocd-update
     config:
       apps:
-      - name: ${{ vars.appName }}-${{ vars.env }}
+      - name: ${{ vars.appName }}
         sources:
         - repoURL: ${{ vars.repoURL }}
           desiredRevision: ${{ task.outputs['commit'].commit }}

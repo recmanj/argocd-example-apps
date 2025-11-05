@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# cert-manager base installation
+# This uses the official cert-manager manifest
+resources:
+  # cert-manager v1.14.4 - update version as needed
+  - https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.yaml
+
+# Common labels for tracking
+commonLabels:
+  app.kubernetes.io/managed-by: kargo
+  app.kubernetes.io/part-of: infrastructure
+
+# Namespace is defined in the upstream manifest
+# The cert-manager namespace will be created automatically

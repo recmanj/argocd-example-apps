@@ -1,0 +1,70 @@
+# Kargo Distributed Controller Helm Values - Staging Cluster
+# This is a controller-only installation that connects to the control plane
+
+## API Server Configuration
+api:
+  # API server is DISABLED for distributed controllers
+  enabled: false
+
+## Controller Configuration
+controller:
+  # Controller is enabled
+  enabled: true
+
+  # Shard name for this controller
+  # All Stages with spec.shard: "staging-shard" will be handled by this controller
+  shardName: "staging-shard"
+
+  # This is NOT the default controller
+  isDefault: false
+
+  # Log configuration
+  logLevel: INFO
+  logFormat: CONSOLE
+
+  # Git client configuration for promotions
+  gitClient:
+    name: "Kargo Staging Controller"
+    email: "noreply@kargo.io"
+
+  # Resources for controller
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+## Webhooks Configuration
+webhooks:
+  # Webhooks are DISABLED for distributed controllers
+  register: false
+
+## RBAC Configuration
+rbac:
+  # Install cluster roles for the controller
+  installClusterRoles: true
+  installClusterRoleBindings: true
+
+## CRDs Configuration
+crds:
+  # CRDs should already exist from the control plane
+  # Only install if they don't exist
+  install: false
+  keep: true
+
+## KubeConfig Secrets
+kubeconfigSecrets:
+  # Secret containing kubeconfig to access the control plane
+  # This allows the controller to "phone home" to read Kargo resources
+  kargo: "kargo-controlplane-kubeconfig"
+
+  # ArgoCD is in the same cluster, so leave empty (local access)
+  # argocd: ""
+
+## Global Configuration
+global:
+  # Namespace for cluster-scoped secrets (should match control plane)
+  clusterSecretsNamespace: kargo-cluster-secrets
+  createClusterSecretsNamespace: true

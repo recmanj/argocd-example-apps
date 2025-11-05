@@ -1,0 +1,106 @@
+# Kargo Control Plane Helm Values
+# Deploy this in the prod cluster (or dedicated management cluster)
+# This is the central control plane with API server, webhooks, and default controller
+
+## API Server Configuration
+api:
+  # API server is enabled for the control plane
+  enabled: true
+
+  # Number of API server replicas
+  replicas: 2  # HA for production
+
+  # Admin account configuration
+  # IMPORTANT: Generate these securely before deploying
+  adminAccount:
+    enabled: true
+    # Generate with: htpasswd -bnBC 10 "" <password> | tr -d ':\n'
+    passwordHash: ""  # SET THIS BEFORE DEPLOYING
+    # Generate with: openssl rand -base64 48 | tr -d "=+/" | head -c 32
+    tokenSigningKey: ""  # SET THIS BEFORE DEPLOYING
+    tokenTTL: 24h
+
+  # Service configuration
+  service:
+    type: ClusterIP  # Change to LoadBalancer or NodePort if needed
+
+  # Ingress configuration (recommended for production)
+  ingress:
+    enabled: false  # Set to true and configure for production
+    # className: nginx
+    # annotations:
+    #   cert-manager.io/cluster-issuer: letsencrypt-prod
+    # hosts:
+    #   - host: kargo.example.com
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    # tls:
+    #   - secretName: kargo-tls
+    #     hosts:
+    #       - kargo.example.com
+
+  # Resources for API server
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+## Controller Configuration
+controller:
+  # Controller is enabled for the control plane
+  enabled: true
+
+  # This is the default controller (handles resources without shard assignment)
+  # By NOT setting shardName, this controller becomes the default
+  isDefault: true
+  # shardName: ""  # Leave undefined for default controller
+
+  # Log configuration
+  logLevel: INFO
+  logFormat: CONSOLE
+
+  # Git client configuration for promotions
+  gitClient:
+    name: "Kargo"
+    email: "noreply@kargo.io"
+
+  # Resources for controller
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+## Webhooks Configuration
+webhooks:
+  # Webhooks are enabled for the control plane
+  register: true
+
+## RBAC Configuration
+rbac:
+  # Install cluster roles and bindings
+  installClusterRoles: true
+  installClusterRoleBindings: true
+
+## CRDs Configuration
+crds:
+  # Install and manage CRDs
+  install: true
+  keep: true
+
+## Global Configuration
+global:
+  # Namespace for cluster-scoped secrets
+  clusterSecretsNamespace: kargo-cluster-secrets
+  createClusterSecretsNamespace: true
+
+# Note: This control plane configuration does NOT specify kubeconfigSecrets
+# because it operates on resources in its own cluster. Distributed controllers
+# in other clusters will specify kubeconfigSecrets to connect back to this
+# control plane.

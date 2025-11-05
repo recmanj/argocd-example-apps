@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: argocd-example-apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/recmanj/argocd-example-apps.git
+        revision: master
+        directories:
+        # This will be patched by envs to filter by environment
+        # e.g., dev: _apps/*/envs/dev
+        - path: _apps/*/envs/*
+  template:
+    metadata:
+      # Application name format: just the app name (no env suffix)
+      # e.g., "nginx" instead of "nginx-dev"
+      name: '{{index .path.segments 1}}'
+      annotations:
+        # Kargo authorization annotation
+        # Format: project:app (no env suffix)
+        kargo.akuity.io/authorized-stage: 'argocd-example-apps:{{index .path.segments 1}}-{{.path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/recmanj/argocd-example-apps.git
+        # Kargo manages branches per app and environment
+        # Format: kargo/{app}/{env}
+        targetRevision: 'kargo/{{index .path.segments 1}}/{{.path.basename}}'
+        path: '.'
+      destination:
+        # Will be patched by envs for specific cluster URLs
+        server: https://kubernetes.default.svc
+        # Namespace is just the app name (no env suffix)
+        # e.g., "nginx" instead of "nginx-dev"
+        namespace: '{{index .path.segments 1}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true

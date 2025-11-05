@@ -4,6 +4,7 @@ metadata:
   name: kustomize-guestbook-prod
   namespace: argocd-example-apps
 spec:
+  # No shard assignment - handled by default controller in control plane
   requestedFreight:
   - origin:
       kind: Warehouse

@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: argocd
+
+resources:
+  # Namespace must be created first
+  - namespace.yaml
+  # Official ArgoCD installation manifest
+  # Version: v2.10.4 (stable)
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v3.2.0/manifests/install.yaml
+
+# Common labels for all resources
+commonLabels:
+  app.kubernetes.io/managed-by: kustomize

@@ -1,0 +1,20 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: cert-manager
+  namespace: argocd-example-apps
+spec:
+  subscriptions:
+  # Track cert-manager releases via the controller image
+  # cert-manager publishes images to quay.io/jetstack/cert-manager-controller
+  - image:
+      repoURL: quay.io/jetstack/cert-manager-controller
+      imageSelectionStrategy: SemVer
+      # Start from v1.14.0 and allow any 1.x version
+      semverConstraint: ^1.14.0
+  # Track changes to cert-manager app configuration in Git
+  - git:
+      repoURL: https://github.com/recmanj/argocd-example-apps.git
+      branch: master
+      includePaths:
+      - "glob:_apps/cert-manager/**"
