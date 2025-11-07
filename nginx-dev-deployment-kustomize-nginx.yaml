@@ -14,7 +14,7 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: public.ecr.aws/nginx/nginx:1.29.3
+      - image: public.ecr.aws/nginx/nginx:1.28.0
         name: nginx
         ports:
         - containerPort: 80
@@ -25,4 +25,4 @@ spec:
             memory: 256Mi
           requests:
             cpu: 100m
-            memory: 256Mi
+            memory: 128Mi
