@@ -14,7 +14,7 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: public.ecr.aws/nginx/nginx:1.29.3
+      - image: public.ecr.aws/nginx/nginx:1.29.2
         name: nginx
         ports:
         - containerPort: 80
